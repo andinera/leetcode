@@ -1,0 +1,33 @@
+func coinChange(coins []int, amount int) int {
+    if amount == 0 {
+        return 0
+    }
+
+    sort.Ints(coins)
+    dp := make([]int, amount+1)
+    dp[0] = 0
+
+    for i := 1; i <= amount; i++ {
+        min := math.MaxInt
+        for j := len(coins)-1; j >= 0; j-- {
+            dividend := i / coins[j]
+            for k := dividend; k > 0; k-- {
+                remainder := (i % coins[j]) + ((dividend - k) * coins[j])
+                if dp[remainder] != 0 || remainder == 0 {
+                    if k + dp[remainder] < min {
+                        min = k + dp[remainder]
+                    }
+                }
+            }
+        }
+        if min != math.MaxInt {
+            dp[i] = min
+        }
+    }
+    
+    if dp[len(dp)-1] == 0 {
+        return -1
+    } else {
+        return dp[len(dp)-1]
+    }
+}

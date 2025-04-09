@@ -1,0 +1,34 @@
+/**
+ * Definition for a Node.
+ * type Node struct {
+ *     Val int
+ *     Children []*Node
+ * }
+ */
+var result []int
+
+func preorder(root *Node) []int {
+    if result == nil {
+        result = make([]int, 1000)
+    }
+    resultIndex := 0
+    
+    var backtrack func(*Node)
+    backtrack = func(node *Node) {
+        if node != nil {
+            if resultIndex <  len(result) {
+                result[resultIndex] = node.Val
+            } else {
+                result = append(result, node.Val)
+            }
+            resultIndex++
+            for i := 0; i < len(node.Children); i++ {
+                backtrack(node.Children[i])
+            }
+        }
+    }
+
+    backtrack(root)
+
+    return result[:resultIndex]
+}

@@ -1,0 +1,57 @@
+func fullJustify(words []string, maxWidth int) []string {
+    dp := make([][]string, 1)
+
+    dp[0] = make([]string, 0)
+    currentRow := 0
+    currentWidth := 0
+    for i := 0; i < len(words); i++ {
+        if len(dp[currentRow]) > 0 {
+            currentWidth++
+        }
+        if len(words[i]) + currentWidth <= maxWidth {
+            dp[currentRow] = append(dp[currentRow], words[i])
+            currentWidth += len(words[i])
+        } else {
+            currentRow++
+            dp = append(dp, make([]string, 1))
+            dp[currentRow][0] = words[i]
+            currentWidth = len(words[i])
+        }
+    }
+
+    result := make([]string, 0)
+    for i := 0; i < len(dp) - 1; i++ {
+        length := 0
+        for j := 0; j < len(dp[i]); j++ {
+            length += len(dp[i][j])
+        }
+        
+        freeSpace := maxWidth - length
+        line := dp[i][0]
+        if len(dp[i]) > 1 {
+            wordSeparations := len(dp[i]) - 1
+            for j := 1; j < len(dp[i]); j++ {
+                line += strings.Repeat(" ", freeSpace / wordSeparations)
+                if freeSpace % wordSeparations != 0 {
+                    line += " "
+                    freeSpace--
+                }
+                freeSpace -= freeSpace / wordSeparations
+                wordSeparations--
+                line += dp[i][j]
+            }
+        } else {
+            line += strings.Repeat(" ", freeSpace)
+        }
+        result = append(result, line)
+    }
+
+    line := dp[len(dp)-1][0]
+    for i := 1; i < len(dp[len(dp)-1]); i++ {
+        line += " " + dp[len(dp)-1][i]
+    }
+    line += strings.Repeat(" ", maxWidth - len(line))
+    result = append(result, line)
+
+    return result
+}

@@ -1,0 +1,46 @@
+func equals(s1, s2 *string, s1Start, wordLength int) bool {
+    for i := 0; i < wordLength; i++ {
+        if (*s1)[s1Start + i] != (*s2)[i] {
+            return false
+        }
+    }
+    return true
+}
+
+func findSubstring(s string, words []string) []int {
+    results := []int{}
+
+    numWords := len(words)
+    wordLength := len(words[0])
+    concatenationLength := numWords * wordLength
+    previousWord := 0
+    for i := 0; i <= len(s) - concatenationLength; i++ {
+        for j := 0; j < numWords; j++ {
+            if equals(&s, &words[j], i, wordLength) {
+                match := make([]bool, numWords)
+                match[j] = true
+                previousWord = j
+                for sIndex := i + wordLength; sIndex < i + concatenationLength; sIndex += wordLength {
+                    for k := previousWord+1;; k++ {
+                        if k == numWords {
+                            k = 0
+                        }
+                        if k == previousWord {
+                            goto nextWord
+                        }
+                        if !match[k] && equals(&s, &words[k], sIndex, wordLength) {
+                            match[k] = true
+                            previousWord = k
+                            break
+                        }
+                    }
+                }
+                results = append(results, i)
+                break
+                nextWord:
+            }
+        }
+    }
+
+    return results
+}

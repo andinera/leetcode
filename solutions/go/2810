@@ -1,0 +1,17 @@
+func finalString(s string) string {
+    result := make([]byte, len(s))
+    resultIndex := 0
+
+    for i := 0; i < len(s); i++ {
+        if s[i] == 'i' {
+            for j := 0; j < resultIndex / 2; j++ {
+                result[j], result[resultIndex - j - 1] = result[resultIndex - j - 1], result[j]
+            }
+        } else {
+            result[resultIndex] = s[i]
+            resultIndex++
+        }
+    }
+
+    return string(result[:resultIndex])
+}

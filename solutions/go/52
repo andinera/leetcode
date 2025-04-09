@@ -1,0 +1,54 @@
+func totalNQueens(n int) int {
+    result := 0
+
+    board := make([][]int, n)
+    for i := 0; i < n; i++ {
+        board[i] = make([]int, n)
+    }
+
+    var backtrack func(int, int)
+    backtrack = func(i, j int) {
+        if i == n-1 {
+            result++
+            return
+        }
+
+        board[i][j] = i+1
+        for k := 1; k < n-i; k++ {
+            if board[k+i][j] == 0 {
+                board[k+i][j] = i+1
+            }
+            if j-k >= 0 && board[k+i][j-k] == 0 {
+                board[k+i][j-k] = i+1
+            }
+            if j+k < n && board[k+i][j+k] == 0 {
+                board[k+i][j+k] = i+1
+            }
+        }
+        for k := 0; k < n; k++ {
+            if board[i+1][k] == 0 {
+                backtrack(i+1, k)
+            }
+        }
+        if board[i][j] == i+1 {
+            board[i][j] = 0
+        }
+        for k := 1; k < n-i; k++ {
+            if board[k+i][j] == i+1 {
+                board[k+i][j] = 0
+            }
+            if j-k >= 0 && board[k+i][j-k] == i+1 {
+                board[k+i][j-k] = 0
+            }
+            if j+k < n && board[k+i][j+k] == i+1 {
+                board[k+i][j+k] = 0
+            }
+        }
+    }
+
+    for j := 0; j < n; j++ {
+        backtrack(0, j)
+    }
+
+    return result
+}

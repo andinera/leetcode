@@ -1,0 +1,37 @@
+type Tree struct {
+    val int
+    parent *Tree
+    left *Tree
+    right *Tree
+}
+
+func lengthOfLIS(nums []int) int {
+    tree := Tree{val: nums[0]}
+    child1 := tree
+    var child2 Tree
+
+    for i := 1; i < len(nums); i++ {
+        node := Tree{val: nums[i]}
+        if nums[i] > child1 {
+            child1.left = &node
+            node.parent = child1
+            child1 = child1.left
+        } else if nums[i] < child1 {
+            if child2 == nil {
+                child2 = &node
+                tree.right = child2
+                child2.parent = tree
+            } else if nums[i] > child2 {
+                child2.left = &node
+                node.parent = child2
+            }
+        }
+    }
+}
+
+// 1,3,5,10,1,6,10,1,2,3,4,5,6
+
+// 1
+// 3
+// 5  6
+// 10  

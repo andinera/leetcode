@@ -1,0 +1,23 @@
+var stack []byte
+
+func removeDuplicates(s string) string {
+    if stack == nil {
+        stack = make([]byte, len(s))
+    }
+    stackIndex := 0
+
+    for i := 0; i < len(s); i++ {
+        if stackIndex == 0 || stack[stackIndex-1] != s[i] {
+            if stackIndex < len(stack) {
+                stack[stackIndex] = s[i]
+            } else {
+                stack = append(stack, s[i])
+            }
+            stackIndex++
+        } else {
+            stackIndex--
+        }
+    }
+
+    return string(stack[:stackIndex])
+}
