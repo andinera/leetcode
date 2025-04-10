@@ -1,0 +1,100 @@
+type LRUCache struct {
+}
+
+type DoublyListNode struct {
+    Key int
+    Val int
+    Previous *DoublyListNode
+    Next *DoublyListNode
+}
+
+var cap int
+var shelf map[int]*DoublyListNode
+var queueHead *DoublyListNode
+var queueTail *DoublyListNode
+var queueSize int
+
+func Constructor(capacity int) LRUCache {
+    cap = capacity
+    shelf = make(map[int]*DoublyListNode, cap)
+    queueHead = nil
+    queueTail = nil
+    queueSize = 0
+    return LRUCache{}
+}
+
+func (this *LRUCache) Get(key int) int {
+    value, exists := shelf[key]
+    if exists {
+        this.MoveToEnd(value)
+        return value.Val
+    } else {
+        return -1
+    }
+    return -1
+}
+
+func (this *LRUCache) Put(key int, value int)  {
+    v, exists := shelf[key]
+    if exists {
+        this.MoveToEnd(v)
+        v.Val = value
+    } else if cap == 1 {
+        if queueHead == nil {
+            queueHead = &DoublyListNode{Key: key, Val: value}
+        } else {
+            delete(shelf, queueHead.Key)
+            queueHead.Key = key
+            queueHead.Val = value
+        }
+        shelf[key] = queueHead
+    } else {
+        if queueSize < cap {
+            node := &DoublyListNode{Key: key, Val: value}
+            queueSize++
+            if queueHead == nil {
+                queueHead = node
+                queueTail = node
+            } else {
+                queueTail.Next = node
+                node.Previous = queueTail
+                queueTail = node
+            }
+            shelf[key] = node
+        } else {
+            delete(shelf, queueHead.Key)
+            queueHead.Key = key
+            queueHead.Val = value
+            shelf[key] = queueHead
+            this.MoveToEnd(queueHead)
+        }
+    }
+}
+
+func (this *LRUCache) MoveToEnd(node *DoublyListNode) {
+    if cap > 1 {
+        previous := node.Previous
+        next := node.Next
+        if next != nil {
+            if previous == nil {
+                queueHead = next
+            } else {
+                previous.Next = next
+            }
+            next.Previous = previous
+            node.Previous = queueTail
+            queueTail.Next = node
+            queueTail = node
+            node.Next = nil
+        }
+    }
+    
+}
+
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * obj := Constructor(capacity);
+ * param_1 := obj.Get(key);
+ * obj.Put(key,value);
+ */

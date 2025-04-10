@@ -1,0 +1,42 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+var pre []int
+var in []int
+var inIndex int
+
+func _buildTree(preIndex int) *TreeNode {
+    if preIndex >= len(pre) || inIndex >= len(in) {
+        return nil
+    }
+
+    var node *TreeNode
+    var left *TreeNode
+    if inIndex < len(in) && pre[preIndex] != in[inIndex] {
+        left = _buildTree(preIndex + 1)
+    }
+
+    if inIndex < len(in) && pre[preIndex] == in[inIndex] {
+        inIndex++
+        node = &TreeNode{Val: pre[preIndex], Left: left, Right: _buildTree(preIndex + 1)}
+    }
+
+    if node != nil {
+        return node
+    } else {
+        return left
+    }
+}
+
+func buildTree(preorder []int, inorder []int) *TreeNode {
+    pre = preorder
+    in = inorder
+    inIndex = 0
+    return _buildTree(0)
+}

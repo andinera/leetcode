@@ -1,0 +1,32 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func _kthSmallest(root *TreeNode, k int) (num, numSmallest int) {
+    if root == nil {
+        return 0, 0
+    } else {
+        leftNum, leftNumSmallest := _kthSmallest(root.Left, k)
+        if leftNumSmallest == k {
+            return leftNum, leftNumSmallest
+        }
+        if leftNumSmallest == k - 1 {
+            return root.Val, k
+        }
+        rightNum, rightNumSmallest := _kthSmallest(root.Right, k - leftNumSmallest - 1)
+        if rightNumSmallest == k - leftNumSmallest - 1 {
+            return rightNum, k
+        } else {
+            return 0, leftNumSmallest + 1 + rightNumSmallest
+        }
+    }
+}
+
+func kthSmallest(root *TreeNode, k int) int {
+    num, _ := _kthSmallest(root, k)
+    return num
+}

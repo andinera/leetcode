@@ -1,0 +1,14 @@
+func rangeBitwiseAnd(left int, right int) int {
+    result := left
+    setBit := 0
+    for i := left + 1; i <= right; {
+        result = result & i
+        if (result >> setBit) % 2 == 1 {
+            i++
+        } else {
+            setBit++
+            i += i % int(math.Pow(2, float64(setBit)))
+        }
+    }
+    return result
+}

@@ -1,0 +1,34 @@
+/**
+ * Definition for a Node.
+ * type Node struct {
+ *     Val int
+ *     Next *Node
+ *     Random *Node
+ * }
+ */
+
+var shelf map[*Node]*Node
+
+func _copyRandomList(head *Node) *Node {
+    if head == nil {
+        return nil
+    }
+
+    value, exists := shelf[head]
+    if exists {
+        return value
+    }
+
+    node := &Node{Val: head.Val}
+    shelf[head] = node
+    node.Next = _copyRandomList(head.Next)
+    node.Random = _copyRandomList(head.Random)
+    return node
+}
+
+func copyRandomList(head *Node) *Node {
+    shelf = make(map[*Node]*Node, 0)
+
+    newHead := _copyRandomList(head)
+    return newHead
+}

@@ -1,0 +1,21 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func _isValidBST(root *TreeNode, leftLimit, rightLimit int) bool {
+    if root == nil {
+        return true
+    } else {
+        return _isValidBST(root.Left, leftLimit, root.Val) &&
+            _isValidBST(root.Right, root.Val, rightLimit) &&
+            root.Val > leftLimit &&
+            root.Val < rightLimit
+    }
+}
+
+func isValidBST(root *TreeNode) bool {
+    return _isValidBST(root, math.MinInt, math.MaxInt)

@@ -1,0 +1,28 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+var result [][]int
+
+func _levelOrder(root *TreeNode, depth int) {
+    if root != nil {
+        if len(result) == depth {
+            result = append(result, []int{root.Val})
+        } else {
+            result[depth] = append(result[depth], root.Val)
+        }
+        _levelOrder(root.Left, depth+1)
+        _levelOrder(root.Right, depth+1)
+    }
+}
+
+func levelOrder(root *TreeNode) [][]int {
+    result = make([][]int, 0)
+    _levelOrder(root, 0)
+    return result
+}

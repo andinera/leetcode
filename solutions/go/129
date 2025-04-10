@@ -1,0 +1,40 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+func _sumNumbers(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    } else {
+        left := _sumNumbers(root.Left)
+        right := _sumNumbers(root.Right)
+
+        if len(left) == 0 && len(right) == 0 {
+            return [][]int{{root.Val}}
+        } else {
+            for i := 0; i < len(left); i++ {
+                left[i] = append(left[i], root.Val)
+            }
+            for i := 0; i < len(right); i++ {
+                right[i] = append(right[i], root.Val)
+            }
+            return slices.Concat(left, right)
+        }
+    }
+}
+
+func sumNumbers(root *TreeNode) int {
+    sumArray := _sumNumbers(root)
+    sum := 0
+    for i := 0; i < len(sumArray); i++ {
+        for j := len(sumArray[i]) - 1; j >= 0; j-- {
+            sum += sumArray[i][j] * int(math.Pow(10, float64(j)))
+        }
+    }
+    return sum
+}

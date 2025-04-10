@@ -1,0 +1,29 @@
+type Backtrack struct {
+    result [][]int
+}
+
+func (this *Backtrack) Compute(n, k int, combo []int) {
+    if k == 0 {
+        newSlice := make([]int, len(combo))
+        copy(newSlice, combo)
+        this.result = append(this.result, newSlice)
+    } else {
+        if len(combo) == 0 {
+            for i := 1; i <= n - k + 1; i++ {
+                this.Compute(n, k - 1, append(combo, i))
+            }
+        } else {
+            for i := combo[len(combo)-1] + 1; i <= n - k + 1; i++ {
+                this.Compute(n, k - 1, append(combo, i))
+            }
+        }
+    }
+}
+
+func combine(n int, k int) [][]int {
+    backtrack := Backtrack{result: [][]int{}}
+
+    backtrack.Compute(n, k, []int{})
+
+    return backtrack.result
+}

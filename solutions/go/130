@@ -1,0 +1,52 @@
+var _board [][]byte
+
+func _setN(i int, j int) {
+    if _board[i][j] == 'Y' {
+        _board[i][j] = 'N'
+        _setN(i-1, j)
+        _setN(i, j-1)
+        _setN(i+1, j)
+        _setN(i, j+1)
+    }
+}
+
+func _solve(i int, j int) bool {
+    if _board[i][j] == 'O' {
+        if i > 0 && j > 0 && i < len(_board) - 1 && j < len(_board[i]) - 1 {
+            _board[i][j] = 'Y'
+            isIsland := _solve(i-1, j) && _solve(i, j-1) && _solve(i+1, j) && _solve(i, j+1)
+            if !isIsland {
+                _setN(i, j)
+            }
+            return isIsland
+        } else {
+            return false
+        }
+    } else if _board[i][j] == 'N' {
+        return false
+    } else {
+        return true
+    }
+}
+
+func solve(board [][]byte)  {
+    _board = board
+
+    for i := 0; i < len(_board); i++ {
+        for j := 0; j < len(_board[i]); j++ {
+            if _board[i][j] == 'O' {
+                _solve(i, j)
+            }
+        }
+    }
+
+    for i := 0; i < len(_board); i++ {
+        for j := 0; j < len(_board[i]); j++ {
+            if _board[i][j] == 'Y' {
+                _board[i][j] = 'X'
+            } else if _board[i][j] == 'N' {
+                _board[i][j] = 'O'
+            }
+        }
+    }
+}

@@ -1,0 +1,27 @@
+type Backtrack struct {
+    result []string
+    shelf map[rune][]string
+}
+
+func (this *Backtrack) Compute(digits string, letters string) {
+    if len(digits) == 0 {
+        this.result = append(this.result, letters)
+    } else {
+        for _, value := range this.shelf[rune(digits[0])] {
+            this.Compute(digits[1:], letters + value)
+        }
+    }
+}
+
+func letterCombinations(digits string) []string {
+    if len(digits) == 0 {
+        return []string{}
+    }
+
+    shelf := map[rune][]string{'2': {"a","b","c"}, '3': {"d","e","f"}, '4': {"g","h","i"}, '5': {"j","k","l"}, '6': {"m","n","o"}, '7': {"p","q","r","s"}, '8': {"t","u","v"}, '9': {"w","x","y","z"}}
+    backtrack := Backtrack{result: []string{}, shelf: shelf}
+
+    backtrack.Compute(digits, "")
+
+    return backtrack.result
+}

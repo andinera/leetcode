@@ -1,0 +1,23 @@
+type Backtrack struct {
+    result [][]int
+}
+
+func (this *Backtrack) Compute(nums []int, combo []int) {
+    if len(nums) == 1 {
+        newSlice := make([]int, len(combo) + 1)
+        copy(newSlice, append(combo, nums[0]))
+        this.result = append(this.result, newSlice)
+    } else {
+        for j := 0; j < len(nums); j++ {
+            this.Compute(slices.Concat(nums[:j], nums[j+1:]), append(combo, nums[j]))
+        }
+    }
+}
+
+func permute(nums []int) [][]int {
+    backtrack := Backtrack{result: [][]int{}}
+
+    backtrack.Compute(nums, []int{})
+
+    return backtrack.result
+}

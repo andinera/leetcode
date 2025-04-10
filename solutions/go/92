@@ -1,0 +1,43 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseBetween(head *ListNode, left int, right int) *ListNode {
+    flippedNodes := make([]*ListNode, right - left + 1)
+    flippedIndex := right - left
+    var resultHead *ListNode
+    var resultTail *ListNode
+
+    for i := 1; head != nil; i++ {
+        if i < left {
+            if resultHead == nil {
+                resultHead = head
+            }
+            resultTail = head
+        } else if i >= left && i <= right {
+            flippedNodes[flippedIndex] = head
+            flippedIndex--
+            if i == right {
+                head = head.Next
+                break
+            }
+        }
+        head = head.Next
+    }
+
+    for i := 0; i < len(flippedNodes); i++ {
+        if resultHead == nil {
+            resultHead = flippedNodes[i]
+            resultTail = flippedNodes[i]
+        } else {
+            resultTail.Next = flippedNodes[i]
+            resultTail = resultTail.Next
+        }
+        resultTail.Next = head
+    }
+
+    return resultHead
+}

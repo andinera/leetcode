@@ -1,0 +1,30 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+var list *TreeNode
+
+func _flatten(root *TreeNode) *TreeNode {
+    if root != nil {
+        if list == nil {
+            list = root
+        } else {
+            list.Right = root
+            list = root
+        }
+        right := root.Right
+        _flatten(root.Left)
+        root.Left = nil
+        _flatten(right)
+    }
+    return root
+}
+
+func flatten(root *TreeNode)  {
+    _flatten(root)
+}

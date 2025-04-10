@@ -1,0 +1,51 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func partition(head *ListNode, x int) *ListNode {
+    tempHead := head
+
+    headCount := 0
+    tailCount := 0
+    for ; head != nil; {
+        if head.Val < x {
+            headCount++
+        } else {
+            tailCount++
+        }
+        head = head.Next
+    }
+
+    if headCount > 0 && tailCount > 0 {
+        headSegment := make([]*ListNode, headCount)
+        tailSegment := make([]*ListNode, tailCount)
+        headIndex := 0
+        tailIndex := 0
+        head = tempHead
+        for ; head != nil; head = head.Next {
+            if head.Val < x {
+                headSegment[headIndex] = head
+                headIndex++
+            } else {
+                tailSegment[tailIndex] = head
+                tailIndex++
+            }
+        }
+    
+        for i := 0; i < headCount - 1; i++ {
+            headSegment[i].Next = headSegment[i+1]
+        }
+        for i := 0; i < tailCount - 1; i++ {
+            tailSegment[i].Next = tailSegment[i+1]
+        }
+        headSegment[headCount-1].Next = tailSegment[0]
+        tailSegment[tailCount - 1].Next = nil
+        return headSegment[0]
+    } else {
+        return tempHead
+    }
+
+}

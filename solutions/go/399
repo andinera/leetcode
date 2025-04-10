@@ -1,0 +1,64 @@
+type Division struct{
+    Variable string
+    Value float64
+}
+
+var routed map[string]bool
+var shelf map[string]*[]Division
+
+func computeRoutes(node string, destination string) float64 {
+    if node == destination {
+        return 1
+    } else {
+        routed[node] = true
+        divisions := *shelf[node]
+        for j := 0; j < len(divisions); j++ {
+            if !routed[divisions[j].Variable] {
+                response := computeRoutes(divisions[j].Variable, destination)
+                if response != math.MinInt {
+                    return response * divisions[j].Value
+                }
+            }
+        }
+    }
+    return math.MinInt
+}
+
+func calcEquation(equations [][]string, values []float64, queries [][]string) []float64 {
+    shelf = make(map[string]*[]Division)
+
+    for i := 0; i < len(equations); i++ {
+        value, exists := shelf[equations[i][0]]
+        if exists {
+            *value = append(*value, Division{Variable: equations[i][1], Value: values[i]})
+        } else {
+            shelf[equations[i][0]] = &[]Division{Division{Variable: equations[i][1], Value: values[i]}}
+        }
+
+        value, exists = shelf[equations[i][1]]
+        if exists {
+            *value = append(*value, Division{Variable: equations[i][0], Value: 1/values[i]})
+        } else {
+            shelf[equations[i][1]] = &[]Division{Division{Variable: equations[i][0], Value: 1/values[i]}}
+        }
+    }
+
+    results := make([]float64, len(queries))
+    for i := 0; i < len(queries); i++ {
+        _, exists1 := shelf[queries[i][0]]
+        _, exists2 := shelf[queries[i][1]]
+        if exists1 && exists2 {
+            routed = make(map[string]bool)
+            response := computeRoutes(queries[i][0], queries[i][1])
+            if response == math.MinInt {
+                results[i] = -1
+            } else {
+                results[i] = response
+            }
+        } else {
+            results[i] = -1
+        }
+    }
+
+    return results
+}
