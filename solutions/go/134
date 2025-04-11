@@ -1,0 +1,45 @@
+func canCompleteCircuit(gas []int, cost []int) int {
+    sumCost := 0
+    sumGas := 0
+    smallestGasIndex := -1
+    smallestGasValue := math.MaxInt
+    for index, value := range gas {
+        sumCost += cost[index]
+        sumGas += gas[index]
+        if value < smallestGasValue {
+            smallestGasValue = value
+            smallestGasIndex = index
+        }
+    }
+
+    if sumCost > sumGas {
+        return -1
+    }
+
+    difference := make([]int, len(gas))
+    for index := range len(gas)+1 {
+        previousIndex := int(math.Abs(float64((index-1+smallestGasIndex) % len(gas))))
+        currentIndex := int(math.Abs(float64((index+smallestGasIndex) % len(gas))))
+        difference[currentIndex] = difference[previousIndex] + (gas[currentIndex] - cost[currentIndex])
+    }
+
+    smallestValue := math.MaxInt
+    smallestIndex := -1
+    nonNegativeFound := false
+    for index, value := range difference {
+        if value < smallestValue {
+            nextIndex := int(math.Abs(float64((index+1) % len(gas))))
+            smallestValue = value
+            smallestIndex = nextIndex
+        }
+        if value >= 0 {
+            nonNegativeFound = true
+        }
+    }
+
+    if nonNegativeFound {
+        return smallestIndex
+    } else {
+        return -1
+    }
+}

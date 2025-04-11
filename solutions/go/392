@@ -1,0 +1,17 @@
+func isSubsequence(s string, t string) bool {
+    if len(s) == 0 {
+        return true
+    }
+
+    matchingIndex := 0
+    for index, _ := range t {
+        if s[matchingIndex] == t[index] {
+            matchingIndex++
+            if matchingIndex == len(s) {
+                return true
+            }
+        }
+    }
+
+    return false
+}

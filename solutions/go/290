@@ -1,0 +1,41 @@
+func wordPattern(pattern string, s string) bool {
+    shelf1 := make(map[byte]string)
+    shelf2 := make(map[string]byte)
+    index := 0
+    word := ""
+
+    for i, value := range s {
+        if unicode.IsLetter(value) {
+            word += string(value)
+        }
+        if len(word) > 0 && (!unicode.IsLetter(value) || i == len(s)-1 ) {
+            if index >= len(pattern) {
+                return false
+            }
+            vString, stringExists := shelf1[pattern[index]]
+            if stringExists {
+                if vString != word {
+                    return false
+                }
+            } else {
+                shelf1[pattern[index]] = word
+            }
+            vByte, byteExists := shelf2[word]
+            if byteExists {
+                if vByte != pattern[index] {
+                    return false
+                }
+            } else {
+                shelf2[word] = pattern[index]
+            }
+            index++
+            word = ""
+        }
+    }
+
+    if len(pattern) > index {
+        return false
+    }
+
+    return true
+}

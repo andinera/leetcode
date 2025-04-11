@@ -1,0 +1,32 @@
+func minSubArrayLen(target int, nums []int) int {
+    if len(nums) == 0 {
+        return 0
+    }
+    if nums[0] >= target {
+        return 1
+    }
+
+    right := 0
+    sum := nums[0]
+    smallestSize := math.MaxInt
+    for left := 0; left < len(nums); {
+        if sum >= target && left < right {
+            sum -= nums[left]
+            left++
+        } else if right < len(nums) - 1 {
+            right++
+            sum += nums[right]
+        } else {
+            break
+        }
+        if sum >= target && right - left + 1 < smallestSize {
+            smallestSize = right - left + 1
+        }
+    }
+
+    if smallestSize == math.MaxInt {
+        return 0
+    } else {
+        return smallestSize
+    }
+}

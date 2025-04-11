@@ -1,0 +1,13 @@
+var steps []int
+
+func climbStairs(n int) int {
+    if steps == nil {
+        steps = []int{1, 2, 3}
+    }
+
+    for i := len(steps); i < n; i++ {
+        steps = append(steps, steps[i-2] + steps[i-1])
+    }
+
+    return steps[n-1]
+}

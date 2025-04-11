@@ -1,0 +1,15 @@
+func containsNearbyDuplicate(nums []int, k int) bool {
+    
+    shelf := make(map[int]int)
+
+    for index, value := range nums {
+        shelfIndex, exists := shelf[value]
+        if exists && index - shelfIndex <= k {
+            return true
+        } else {
+            shelf[value] = index
+        }
+    }
+
+    return false
+}

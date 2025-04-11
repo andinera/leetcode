@@ -1,0 +1,17 @@
+func searchInsert(nums []int, target int) int {
+    lenNums := len(nums)
+    if lenNums == 1 {
+        if target > nums[0] {
+            return 1
+        } else {
+            return 0
+        }
+    }
+    if target < nums[lenNums/2] {
+        return searchInsert(nums[:lenNums/2], target)
+    } else if target > nums[lenNums/2] {
+        return searchInsert(nums[lenNums/2:], target) + lenNums/2
+    } else {
+        return lenNums/2
+    }
+}

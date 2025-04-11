@@ -1,0 +1,64 @@
+var tree [][]int
+var connectedEdges [][]int
+var goodNodes int
+ 
+func branchLength(sourceNode int, destinationNode int) int {
+    treeIndices := connectedEdges[destinationNode]
+    if destinationNode != 0 && len(treeIndices) == 1 {
+        // no children
+        goodNodes++
+        return 1
+    } else {
+        // at least one child
+        nodeSize := 0
+        firstBranchSize := 0
+        good := true
+        for _, treeValue := range treeIndices {
+            for _, node := range tree[treeValue] {
+                if node != sourceNode && node != destinationNode {
+                    branchSize := branchLength(destinationNode, node)
+                    nodeSize += branchSize
+                    if firstBranchSize == 0 {
+                        firstBranchSize = branchSize
+                    } else if firstBranchSize != branchSize {
+                        good = false
+                    }
+                }
+            }
+        }
+        if good {
+            goodNodes++
+        }
+        return nodeSize + 1
+    }
+}
+ 
+func countGoodNodes(edges [][]int) int {
+    goodNodes = 0
+    tree = edges
+
+    if connectedEdges == nil {
+        connectedEdges = make([][]int, 0)
+    }
+    for index := range len(connectedEdges) {
+        connectedEdges[index] = connectedEdges[index][:0]
+    }
+    for i, value := range tree {
+        for j := range 2 {
+            for ; len(connectedEdges) <= value[j]; {
+                connectedEdges = append(connectedEdges, nil)
+            }
+            if connectedEdges[value[j]] == nil {
+                connectedEdges[value[j]] = make([]int, 0)
+            }
+            connectedEdges[value[j]] = append(connectedEdges[value[j]], i)
+        }
+    }
+ 
+    if len(tree) == 0 {
+        return 0
+    }
+
+    branchLength(0, 0)
+    return goodNodes
+}

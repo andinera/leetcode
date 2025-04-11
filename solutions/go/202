@@ -1,0 +1,32 @@
+var shelf map[int]struct{}
+
+func _isHappy(n int) bool {
+    _, exists := shelf[n]
+    if exists {
+        return false
+    }
+
+    shelf[n] = struct{}{}
+    digits := make([]int, 0)
+
+    for ; n != 0; {
+        digits = append(digits, n % 10)
+        n = n / 10
+    }
+
+    sum := 0
+    for _, value := range digits {
+        sum += value * value
+    }
+
+    if sum == 1 {
+        return true
+    }
+
+    return _isHappy(sum)
+}
+
+func isHappy(n int) bool {
+    shelf = make(map[int]struct{})
+    return _isHappy(n)
+}

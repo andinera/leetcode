@@ -1,0 +1,39 @@
+func _setZeros(matrix [][]int, i int, j int) {
+    isZero := matrix[i][j] == 0
+    if isZero {
+        for ii := 0; ii < i; ii++ {
+            matrix[ii][j] = 0
+        }
+        for jj := 0; jj < j; jj++ {
+            matrix[i][jj] = 0
+        }
+    }
+
+    for ii := i; ii < len(matrix); ii++ {
+        var startJ int
+        if ii == i {
+            startJ = j+1
+        } else {
+            startJ = 0
+        }
+        for jj := startJ; jj < len(matrix[ii]); jj++ {
+            if matrix[ii][jj] == 0 {
+                _setZeros(matrix, ii, jj)
+                goto outside
+            }
+        }
+    }
+    outside:
+    if isZero {
+        for ii := i; ii < len(matrix); ii++ {
+            matrix[ii][j] = 0
+        }
+        for jj := j; jj < len(matrix[i]); jj++ {
+            matrix[i][jj] = 0
+        }
+    }
+}
+
+func setZeroes(matrix [][]int)  {
+    _setZeros(matrix, 0, 0)
+}

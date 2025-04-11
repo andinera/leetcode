@@ -1,0 +1,21 @@
+func longestCommonPrefix(strs []string) string {
+    prefix := ""
+    
+    for i := 0; ; i++ {
+        var r byte
+        for _, str := range strs {
+            if len(str) <= i {
+                goto outside
+            }
+            if r == 0 {
+                r = str[i]
+            } else if str[i] != r {
+                goto outside
+            }
+        }
+        prefix += string(r)
+    }
+    outside:
+
+    return prefix
+}

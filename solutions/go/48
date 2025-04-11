@@ -1,0 +1,14 @@
+func rotate(matrix [][]int)  {
+    for i := 0; i < int(math.Ceil(float64(len(matrix)) / 2)); i++ {
+        for j := 0; j < int(math.Floor(float64(len(matrix)) / 2)); j++ {
+            matrix[i][j],
+            matrix[j][len(matrix)-i-1],
+            matrix[len(matrix)-i-1][len(matrix)-j-1],
+            matrix[len(matrix)-j-1][i] =
+            matrix[len(matrix)-j-1][i],
+            matrix[i][j],
+            matrix[j][len(matrix)-i-1],
+            matrix[len(matrix)-i-1][len(matrix)-j-1]
+        }
+    }
+}

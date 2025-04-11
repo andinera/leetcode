@@ -1,0 +1,23 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func countNodes(root *TreeNode) int {
+    if root == nil {
+        return 0
+    } else {
+        leftValue := 0
+        rightValue := 0
+        if root.Left != nil {
+            leftValue = countNodes(root.Left)
+        }
+        if root.Right != nil {
+            rightValue = countNodes(root.Right)
+        }
+        return 1 + leftValue + rightValue
+    }
+}

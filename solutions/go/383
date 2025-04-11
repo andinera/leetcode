@@ -1,0 +1,18 @@
+func canConstruct(ransomNote string, magazine string) bool {
+    shelf := make(map[rune]int, 0)
+
+    for _, letter := range magazine {
+            shelf[letter] += 1
+    }
+
+    for _, letter := range ransomNote {
+        count := shelf[letter]
+        if count >= 1 {
+            shelf[letter] -= 1
+        } else {
+            return false
+        }
+    }
+
+    return true
+}

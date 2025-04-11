@@ -1,0 +1,40 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+var results []float64
+var depthCount []int
+
+func _averageOfLevels(root *TreeNode, depth int) {
+    if root != nil {
+        if len(results) == depth {
+            results = append(results, float64(root.Val))
+            depthCount = append(depthCount, 1)
+        } else {
+            results[depth] += float64(root.Val)
+            depthCount[depth]++
+        }
+
+        _averageOfLevels(root.Left, depth+1)
+        _averageOfLevels(root.Right, depth+1)
+    }
+}
+
+func averageOfLevels(root *TreeNode) []float64 {
+    results = []float64{float64(root.Val)}
+    depthCount = []int{1}
+
+    _averageOfLevels(root.Left, 1)
+    _averageOfLevels(root.Right, 1)
+
+    for i := 0; i < len(results); i++ {
+        results[i] /= float64(depthCount[i])
+    }
+
+    return results
+}

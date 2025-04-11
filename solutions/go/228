@@ -1,0 +1,28 @@
+func summaryRanges(nums []int) []string {
+    results := make([]string, 0)
+
+    if len(nums) == 0 {
+        return results
+    }
+    
+    firstNum := nums[0]
+    previousNum := nums[0]
+    for _, num := range nums[1:] {
+        if previousNum != num-1 {
+            if firstNum == previousNum {
+                results = append(results, fmt.Sprintf("%d", firstNum))
+            } else {
+                results = append(results, fmt.Sprintf("%d->%d", firstNum, previousNum))
+            }
+            firstNum = num
+        }
+        previousNum = num
+    }
+    if firstNum == previousNum {
+        results = append(results, fmt.Sprintf("%d", firstNum))
+    } else {
+        results = append(results, fmt.Sprintf("%d->%d", firstNum, previousNum))
+    }
+
+    return results
+}

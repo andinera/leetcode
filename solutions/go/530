@@ -1,0 +1,43 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+var vals []int
+
+func ugh(root *TreeNode) {
+    if root != nil {
+        vals = append(vals, root.Val)
+        ugh(root.Left)
+        ugh(root.Right)
+    }
+}
+
+func getMinimumDifference(root *TreeNode) int {
+    vals = make([]int, 0)
+    if root == nil {
+        return 0
+    } else {
+        vals = append(vals, root.Val)
+        ugh(root.Left)
+        ugh(root.Right)
+    }
+
+    if len(vals) == 1 {
+        return 0
+    }
+
+    sort.Ints(vals)
+    smallestDifference := math.MaxInt
+    for index, _ := range vals[1:] {
+        if vals[index+1] - vals[index] < smallestDifference {
+            smallestDifference = vals[index+1] - vals[index]
+        }
+    }
+
+    return smallestDifference
+}

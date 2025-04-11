@@ -1,0 +1,10 @@
+func longestPalindrome(s string) string {
+    evens := make([][]int, len(s))
+    odds := make([][]int, len(s))
+
+    for i := 2;; i++ {
+        for j := 0; j < len(s)-i+1; j++ {
+            if s[j] == 
+        }
+    }
+}

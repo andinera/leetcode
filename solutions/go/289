@@ -1,0 +1,55 @@
+func _gameOfLife(board [][]int, i int, j int) {
+    liveNeighbors := 0
+    if i > 0 {  // up
+        liveNeighbors += board[i-1][j]
+    }
+    if i < len(board) - 1 { // down
+        liveNeighbors += board[i+1][j]
+    }
+    if j > 0 {  // right
+        liveNeighbors += board[i][j-1]
+    }
+    if j < len(board[i]) - 1 {  // left
+        liveNeighbors += board[i][j+1]
+    }
+    if i > 0 && j > 0 { // up-left
+        liveNeighbors += board[i-1][j-1]
+    }
+    if i > 0 && j < len(board[i]) - 1 { // up-right
+        liveNeighbors += board[i-1][j+1]
+    }
+    if i < len(board) - 1 && j > 0 { // down-left
+        liveNeighbors += board[i+1][j-1]
+    }
+    if i < len(board) - 1 && j < len(board[i]) - 1 {    // down-right
+        liveNeighbors += board[i+1][j+1]
+    }
+    state := board[i][j]
+    if state == 1 {
+        if liveNeighbors < 2 || liveNeighbors > 3 {
+            state = 0
+        }
+    } else {
+        if liveNeighbors == 3 {
+            state = 1
+        }
+    }
+
+    if i != len(board)-1 || j != len(board[i])-1 {
+        newI := i
+        newJ := j
+        if j < len(board[i]) - 1 {
+            newJ++
+        } else {
+            newI++
+            newJ = 0
+        }
+        _gameOfLife(board, newI, newJ)
+    }
+
+    board[i][j] = state
+}
+
+func gameOfLife(board [][]int)  {
+    _gameOfLife(board, 0, 0)
+}

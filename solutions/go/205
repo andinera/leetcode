@@ -1,0 +1,30 @@
+var shelf map[byte]byte
+
+func isIsomorphic(s string, t string) bool {
+    if shelf == nil {
+        shelf = make(map[byte]byte)
+    } else {
+        clear(shelf)
+    }
+
+    for i := range len(s) {
+        value, exists := shelf[s[i]]
+        if exists && value != t[i] {
+            return false
+        } else {
+            shelf[s[i]] = t[i]
+        }
+    }
+
+    clear(shelf)
+    for i := range len(t) {
+        value, exists := shelf[t[i]]
+        if exists && value != s[i] {
+            return false
+        } else {
+            shelf[t[i]] = s[i]
+        }
+    }
+
+    return true
+}

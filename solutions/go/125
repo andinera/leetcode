@@ -1,0 +1,19 @@
+func isPalindrome(s string) bool {
+    leftIndex := 0
+    rightIndex := len(s)-1
+
+    for ; leftIndex < rightIndex; {
+        if !unicode.IsLetter(rune(s[leftIndex])) && !unicode.IsNumber(rune(s[leftIndex])) {
+            leftIndex++
+        } else if !unicode.IsLetter(rune(s[rightIndex])) && !unicode.IsNumber(rune(s[rightIndex])) {
+            rightIndex--
+        } else if unicode.ToLower(rune(s[leftIndex])) != unicode.ToLower(rune(s[rightIndex])) {
+            return false
+        } else {
+            leftIndex++
+            rightIndex--
+        }
+    }
+
+    return true
+}

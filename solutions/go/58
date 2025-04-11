@@ -1,0 +1,17 @@
+func lengthOfLastWord(s string) int {
+    wordLength := 0
+    reset := false
+    for _, rune := range s {
+        if rune == ' ' {
+            reset = true
+        } else {
+            if reset {
+                reset = false
+                wordLength = 0
+            }
+            wordLength++
+        }
+    }
+
+    return wordLength
+}

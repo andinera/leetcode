@@ -1,0 +1,20 @@
+func mySqrt(x int) int {
+    if x == 0 {
+        return 0
+    } else if x == 1 {
+        return 1
+    }
+
+    initialGuess := float64(x) / 2
+
+    for ;; {
+        value := float64((initialGuess + float64(x) / initialGuess) / 2)
+        difference := float64(initialGuess - value)
+        initialGuess = value
+        if difference < 0.1 {
+            break
+        }
+    }
+
+    return int(initialGuess)
+}
