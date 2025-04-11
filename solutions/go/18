@@ -1,0 +1,67 @@
+func fourSum(nums []int, target int) [][]int {
+    sort.Slice(nums, func(i, j int) bool {
+        return nums[i] < nums[j]
+    })
+
+    mapOfNumbers := make(map[int]int)
+    for _, value := range nums {
+        numberOfInstances, exists := mapOfNumbers[value]
+        if exists {
+            mapOfNumbers[value] = numberOfInstances + 1
+        } else {
+            mapOfNumbers[value] = 1
+        }
+    }
+
+    subsets := make([][]int, 0)
+
+    var backtrack func([]int, int, int) bool
+    backtrack = func(collection []int, start int, currentIndex int) bool {
+        if collection[2] != math.MinInt {
+            sum := target - (collection[0] + collection[1] + collection[2])
+
+            numberOfInstances, exists := mapOfNumbers[sum]
+            if exists && sum >= collection[2] {
+                num := 0
+                if collection[0] == sum {
+                    num ++
+                }
+                if collection[1] == sum {
+                    num ++
+                }
+                if collection[2] == sum {
+                    num ++
+                }
+                if numberOfInstances > num {
+                    collectionCopy := make([]int, 4)
+                    copy(collectionCopy, collection)
+                    collectionCopy[3] = sum
+                    subsets = append(subsets, collectionCopy)
+                    return true
+                }
+            } else {
+                return false
+            }
+
+            return false
+        }
+
+        previousValue := math.MinInt
+        for i, value := range nums[start:] {
+            if value == previousValue {
+                continue
+            }
+            collection[currentIndex] = value
+            added := backtrack(collection, start + i + 1, currentIndex + 1)
+            previousValue = value
+            collection[currentIndex] = math.MinInt
+            if added {
+                continue
+            }
+        }
+        return false
+    }
+
+    backtrack([]int{math.MinInt, math.MinInt, math.MinInt}, 0, 0)
+    return subsets
+}

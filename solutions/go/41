@@ -1,0 +1,49 @@
+func firstMissingPositive(nums []int) int {
+
+    var move func(int)
+    move = func(index int) {
+        num := nums[index]
+        if num == math.MinInt || (num > 0 && num <= len(nums) && nums[num-1] == num) {
+            if num-1 != index {
+                nums[index] = math.MinInt
+            }
+            return
+        }
+        nums[index] = math.MinInt
+        if num > 0 && num <= len(nums) {
+            move(num-1)
+            nums[num-1] = num
+        }
+    }
+
+    for index, _ := range nums {
+        move(index)
+    }
+
+    for index, num := range nums {
+        if num == math.MinInt {
+            return index+1
+        }
+    }
+    return len(nums)+1
+
+
+
+
+
+
+    // foundNumbers := make([]int, len(nums))
+
+    // for _, num := range nums {
+    //     if num > 0 && num <= len(nums) {
+    //         foundNumbers[num-1] += 1
+    //     }
+    // }
+
+    // for index, num := range foundNumbers {
+    //     if num == 0 {
+    //         return index+1
+    //     }
+    // }
+    // return len(nums)+1
+}

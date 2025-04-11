@@ -1,0 +1,30 @@
+func jump(nums []int) int {
+
+    jumps := make([]int, len(nums))
+    jumps[len(nums)-1] = 0
+
+    for i := len(nums)-2; i >= 0; i-- {
+        if nums[i] == 0 {
+            jumps[i] = math.MaxInt
+            continue
+        }
+        jumpIndex := int(math.Min(float64(i+nums[i]), float64(len(jumps)-1)))
+        fewestJumps := jumps[jumpIndex]
+        for j := jumpIndex-1; j > i; j-- {
+            if jumps[j] <= fewestJumps {
+                fewestJumps = jumps[j]
+            } else {
+                break
+            }
+        }
+        if fewestJumps == math.MaxInt {
+            jumps[i] = fewestJumps
+        } else {
+            jumps[i] = fewestJumps + 1
+        }
+        if jumps[i] < jumps[i+1] {
+            jumps[i+1] = jumps[i]
+        }
+    }
+    return jumps[0]
+}

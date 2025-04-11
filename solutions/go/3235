@@ -1,0 +1,128 @@
+type Circle struct {
+    Index int
+    X float64
+    Y float64
+    R float64
+    Visited bool
+    End bool
+}
+
+var useBig bool
+
+func inRange(x1 float64, y1 float64, x2 float64, y2 float64, distance float64) bool {
+    if useBig {
+        precision := uint(200)
+        x1Float := new(big.Float).SetPrec(precision).SetFloat64(x1)
+        y1Float := new(big.Float).SetPrec(precision).SetFloat64(y1)
+        x2Float := new(big.Float).SetPrec(precision).SetFloat64(x2)
+        y2Float := new(big.Float).SetPrec(precision).SetFloat64(y2)
+        distanceFloat := new(big.Float).SetPrec(precision).SetFloat64(distance)
+        resultx := new(big.Float).SetPrec(precision)
+        resultx.Abs(resultx.Sub(x1Float, x2Float))
+        resulty := new(big.Float).SetPrec(precision)
+        resulty.Abs(resulty.Sub(y1Float, y2Float))
+        resultx.Sqrt(resultx.Add(resultx.Mul(resultx, resultx), resulty.Mul(resulty, resulty)))
+        return resultx.Cmp(distanceFloat) <= 0
+    } else {
+        largestNumber := math.Pow(math.Abs(x1 - x2), 2) + math.Pow(math.Abs(y1 - y2), 2)
+        sqrt := math.Sqrt(largestNumber)
+        return sqrt <= distance
+    }
+}
+
+func circleIntersectsBox(circle Circle, x float64, y float64) bool {
+    return (circle.Y < y && circle.X - circle.R < x) ||
+            (circle.X < x && circle.Y - circle.R < y) ||
+            (circle.X >= x && circle.Y >= y && inRange(circle.X, circle.Y, x, y, circle.R))
+}
+
+func intersectsStart(circle Circle, x float64, y float64) bool {
+    return (circle.Y < y && circle.X - circle.R < x && circle.X + circle.R >= x) ||
+            (circle.X < x && circle.Y - circle.R <= 0 && circle.Y + circle.R > 0) ||
+            inRange(circle.X, circle.Y, x, y, circle.R) ||
+            inRange(circle.X, circle.Y, 0, 0, circle.R)
+}
+
+func intersectsEnd(circle Circle, x float64, y float64) bool {
+    return (circle.Y < y && circle.X - circle.R <= 0 && circle.X + circle.R > 0) ||
+            (circle.X < x && circle.Y - circle.R < y && circle.Y + circle.R >= y) ||
+            inRange(circle.X, circle.Y, x, y, circle.R) ||
+            inRange(circle.X, circle.Y, 0, 0, circle.R)
+}
+
+func linesIntersect(a float64, b float64, c float64, d float64, p float64, q float64, r float64, s float64) bool {
+  det := (c - a) * (s - q) - (r - p) * (d - b);
+  if (det == 0) {
+    return false
+  } else {
+    lambda := ((s - q) * (r - a) + (p - r) * (s - b)) / det
+    gamma := ((b - d) * (r - a) + (c - a) * (s - b)) / det
+    return (0 < lambda && lambda < 1) && (0 < gamma && gamma < 1)
+  }
+}
+
+func canReachCorner(xCorner int, yCorner int, circles [][]int) bool {
+    useBig = len(circles) < 100
+    x := float64(xCorner)
+    y := float64(yCorner)
+    goCircles := make([]*Circle, 0)
+    graph := make(map[int][]*Circle)
+    starts := make([]*Circle, 0)
+
+    for _, circle := range circles {
+        // port array to struct
+        goCircle := Circle{X: float64(circle[0]), Y: float64(circle[1]), R: float64(circle[2])}
+
+        // if circle intersects box, add it
+        if circleIntersectsBox(goCircle, x, y) {
+            // if circle overlaps start and stop walls, return false
+            intersectsStart := intersectsStart(goCircle, x, y)
+            intersectsEnd := intersectsEnd(goCircle, x, y)
+            if intersectsStart && intersectsEnd {
+                return false
+            } else if intersectsStart {
+                starts = append(starts, &goCircle)
+            } else if intersectsEnd {
+                goCircle.End = true
+            }
+
+            goCircle.Index = len(goCircles)
+            graph[goCircle.Index] = make([]*Circle, 0)
+            for _, value := range goCircles {
+                if inRange(goCircle.X, goCircle.Y, value.X, value.Y, goCircle.R + value.R) &&
+                        (circleIntersectsBox(Circle{X: math.Abs(goCircle.X - value.X)/2, Y: math.Abs(goCircle.Y - value.Y)/2}, x, y) ||
+                        linesIntersect(goCircle.X, goCircle.Y, value.X, value.Y, 0, y, x, y) ||
+                        linesIntersect(goCircle.X, goCircle.Y, value.X, value.Y, x, 0, x, y)) {
+                    // Circles touch inside the box
+                    graph[goCircle.Index] = append(graph[goCircle.Index], value)
+                    graph[value.Index] = append(graph[value.Index], &goCircle)
+                }
+            }
+
+            goCircles = append(goCircles, &goCircle)
+        }
+    }
+
+    // iterate through starts to search graph to find a path to an end
+    for _, start := range starts {
+        stack := make([]*Circle, 0)
+        stack = append(stack, start)
+        start.Visited = true
+        for ; len(stack) > 0 ; {
+            current := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+
+            for _, connected := range graph[current.Index] {
+                if !connected.Visited {
+                    if connected.End {
+                        return false
+                    }
+                    connected.Visited = true
+                    stack = append(stack, connected)
+                }
+            }
+        }
+    }
+
+    return true
+}

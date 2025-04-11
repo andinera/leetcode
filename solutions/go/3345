@@ -1,0 +1,24 @@
+func smallestNumber(n int, t int) int {
+
+    for i := n;; i++ {
+        digits := make([]int, 0)
+        if i < 10 {
+            digits = append(digits, i)
+        } else if i < 100 {
+            digits = append(digits, i / 10, i % 10)
+        } else {
+            digits = append(digits, 1, 0, 0)
+        }
+
+        product := 1
+        for _, value := range digits {
+            product *= value
+        }
+
+        // fmt.Println("test4", n, t, i, digits, product)
+        if product % t == 0 {
+            return i
+        }
+    }
+    return 0
+}

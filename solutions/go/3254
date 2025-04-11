@@ -1,0 +1,30 @@
+func resultsArray(nums []int, k int) []int {
+    if len(nums) == 1 || k == 1 {
+        return nums
+    }
+
+    consecutiveWait := 0
+    var previousValue int = -1
+    results := make([]int, len(nums) - k + 1)
+    resultsIndex := 0
+    for index, value := range nums {
+        resultValue := -1
+        if previousValue >= 0 {
+            if previousValue == value - 1 {
+                consecutiveWait++
+                if consecutiveWait >= k-1 {
+                    resultValue = value
+                }
+            } else {
+                consecutiveWait = 0
+            }
+        }
+        if index >= k-1 {
+            results[resultsIndex] = resultValue
+            resultsIndex++
+        }
+        previousValue = value
+    }
+
+    return results
+}

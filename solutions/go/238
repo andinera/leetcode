@@ -1,0 +1,22 @@
+func productExceptSelf(nums []int) []int {
+    if len(nums) <= 1 {
+        return nums
+    }
+
+    answer := make([]int, len(nums))
+
+    answer[0] = 1
+    answer[1] = nums[0]
+    for index := 2; index < len(nums); index++ {
+        answer[index] = answer[index-1] * nums[index-1]
+    }
+
+    previousAnswer := nums[len(nums)-1]
+    answer[len(nums)-2] = nums[len(nums)-1] * answer[len(nums)-2]
+    for index := len(nums)-3; index >= 0; index-- {
+        previousAnswer = previousAnswer * nums[index+1]
+        answer[index] = answer[index] * previousAnswer
+    }
+
+    return answer
+}

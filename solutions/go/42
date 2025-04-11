@@ -1,0 +1,35 @@
+type Hill struct {
+    Index int
+    Peak int
+    Trough int
+
+    Previous *Hill
+}
+
+func trap(heights []int) int {
+    var hillStackHead *Hill
+    totalWater := 0
+
+    for heightIndex, height := range heights {
+        for ; hillStackHead != nil && height > hillStackHead.Peak ; {
+            hillStackHead = hillStackHead.Previous
+            if (hillStackHead != nil) {
+                totalWater += (heightIndex-1 - hillStackHead.Index) * (min(hillStackHead.Peak, height) - hillStackHead.Trough)
+            }
+        }
+
+        if hillStackHead != nil && hillStackHead.Peak == height {
+            hillStackHead.Index = heightIndex
+            hillStackHead.Trough = height
+        } else {
+            if (hillStackHead != nil) {
+                hillStackHead.Trough = height
+            }
+            hill := Hill{Index: heightIndex, Peak: height, Trough: height, Previous: hillStackHead}
+            hillStackHead = &hill
+        }
+
+    }
+
+    return totalWater
+}

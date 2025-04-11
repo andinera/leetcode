@@ -1,0 +1,29 @@
+func removeDuplicates(nums []int) int {
+    previousSetIndex := -1
+    previousValue := math.MinInt
+    k := 0
+    times := 0
+
+    for index, value := range nums {
+        if value != previousValue {
+            previousValue = value
+            times = 0
+        }
+        times++
+        if times <= 2 {
+            for i := previousSetIndex+1 ; i < len(nums); i++ {
+                if nums[i] == math.MinInt || nums[i] == value {
+                    nums[i] = value
+                    previousSetIndex = i
+                    break
+                }
+            }
+            k++
+        }
+        if index != previousSetIndex {
+            nums[index] = math.MinInt
+        }
+    }
+
+    return k
+}

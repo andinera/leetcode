@@ -1,0 +1,12 @@
+func hIndex(citations []int) int {
+    if len(citations) == 1 && citations[0] > 0 {
+        return 1
+    }
+    sort.Sort(sort.Reverse(sort.IntSlice(citations)))
+    for index, value := range citations {
+        if index+1 > value {
+            return index
+        }
+    }
+    return len(citations)
+}

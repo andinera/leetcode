@@ -1,0 +1,7 @@
+func angleClock(hour int, minutes int) float64 {
+    minutesAngle := 360 * (float64(minutes) / 60)
+    hourFractionAngle := minutesAngle / 360
+    hoursAngle := 360 * (float64(hour) / 12) + (hourFractionAngle * (360 / 12))
+
+    return math.Min(math.Abs(minutesAngle - hoursAngle), 360 - math.Abs(minutesAngle - hoursAngle))
+}

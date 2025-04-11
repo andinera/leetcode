@@ -1,0 +1,17 @@
+func majorityElement(nums []int) int {
+    sort.Ints(nums)
+    count := 0
+    previousValue := math.MinInt
+    for _, value := range nums {
+        if value == previousValue {
+            count++
+        } else {
+            count = 1
+            previousValue = value
+        }
+        if count > len(nums)/2 {
+            return value
+        }
+    }
+    return 0
+}

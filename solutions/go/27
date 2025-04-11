@@ -1,0 +1,13 @@
+func removeElement(nums []int, val int) int {
+    k := 0
+    kSlice := make([]int, len(nums));
+    for _, value := range nums {
+        if value != val {
+            kSlice[k] = value
+            k++
+        }
+    }
+
+    copy(nums, kSlice)
+    return k
+}

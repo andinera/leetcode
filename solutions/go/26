@@ -1,0 +1,22 @@
+func removeDuplicates(nums []int) int {
+    // sort.Ints(nums)
+    k := 0
+    kSlice := make([]int, len(nums))
+    dpArray := make([]int, 201)
+    for index := range len(dpArray) {
+        dpArray[index] = math.MinInt
+    }
+
+    // previous := math.MinInt
+    for _, value := range nums {
+        if dpArray[value + 100] == math.MinInt {
+            kSlice[k] = value
+            k++
+            // previous = value
+            dpArray[value + 100] = value
+        }
+    }
+
+    copy(nums, kSlice)
+    return k
+}

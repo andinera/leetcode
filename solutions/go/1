@@ -1,0 +1,18 @@
+function equal(nums: number[], value: number, target: number): number {
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] + value === target) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function twoSum(nums: number[], target: number): number[] {
+    for (let i = 0; i < nums.length - 1; i++) {
+        let index = equal(nums.toSpliced(0, i + 1), nums[i], target);
+        if (index >= 0) {
+            return [i, index + i + 1];
+        }
+    }
+    return [];
+};

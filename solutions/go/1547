@@ -1,0 +1,37 @@
+var memo [][]int
+var newCuts []int
+
+func cost(left int, right int) int {
+    if memo[left][right] != -1 {
+        return memo[left][right]
+    }
+    if right - left == 1 {
+        return 0
+    }
+    ans := math.MaxInt
+    for mid := left + 1; mid < right; mid++ {
+        cost := cost(left, mid) + cost(mid, right) + newCuts[right] - newCuts[left]
+        ans = int(math.Min(float64(ans), float64(cost)))
+    }
+    memo[left][right] = ans
+    return ans
+}
+
+func minCost(n int, cuts []int) int {
+    m := len(cuts)
+    newCuts = make([]int, m+2)
+    newCuts[0] = 0
+    copy(newCuts[1:], cuts)
+    newCuts[len(newCuts)-1] = n
+    sort.Ints(newCuts)
+
+    memo = make([][]int, m+2)
+    for i := range m+2 {
+        memo[i] = make([]int, m+2)
+        for j := range m+2 {
+            memo[i][j] = -1
+        }
+    }
+
+    return cost(0, len(newCuts)-1)
+}

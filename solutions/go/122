@@ -1,0 +1,13 @@
+func maxProfit(prices []int) int {
+    totalProfit := 0
+    previousPrice := prices[0]
+
+    for _, value := range prices[1:] {
+        if value > previousPrice {
+            totalProfit += value - previousPrice
+        }
+        previousPrice = value
+    }
+
+    return totalProfit
+}

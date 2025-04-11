@@ -1,0 +1,42 @@
+func romanToInt(s string) int {
+    count := 0
+    var lastRune rune
+    for _, rune := range s {
+        switch rune {
+            case 'M':
+                count += 1000
+                if lastRune == 'C' {
+                    count -= 200
+                }
+            case 'D':
+                count += 500
+                if lastRune == 'C' {
+                    count -= 200
+                }
+            case 'C':
+                count += 100
+                if lastRune == 'X' {
+                    count -= 20
+                }
+            case 'L':
+                count += 50
+                if lastRune == 'X' {
+                    count -= 20
+                }
+            case 'X':
+                count += 10
+                if lastRune == 'I' {
+                    count -= 2
+                }
+            case 'V':
+                count += 5
+                if lastRune == 'I' {
+                    count -= 2
+                }
+            case 'I':
+                count += 1
+        }
+        lastRune = rune
+    }
+    return count
+}

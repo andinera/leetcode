@@ -1,0 +1,43 @@
+var set map[int]struct{}
+
+type RandomizedSet struct {}
+
+func Constructor() RandomizedSet {
+    set = make(map[int]struct{})
+    return RandomizedSet{}
+}
+
+func (this *RandomizedSet) Insert(val int) bool {
+    _, exists := set[val]
+    response := !exists
+    set[val] = struct{}{}
+    return response    
+}
+
+func (this *RandomizedSet) Remove(val int) bool {
+    _, exists := set[val]
+    response := exists
+    delete(set, val)
+    return response
+}
+
+func (this *RandomizedSet) GetRandom() int {
+    target := rand.IntN(len(set))
+    count := 0
+    for value := range set {
+        if count == target {
+            return value
+        }
+        count++
+    }
+    return 0
+}
+
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * obj := Constructor();
+ * param_1 := obj.Insert(val);
+ * param_2 := obj.Remove(val);
+ * param_3 := obj.GetRandom();
+ */

@@ -1,0 +1,50 @@
+func validateCell(numbersFound []int, cell byte) bool {
+    if cell != '.' {
+        intCell := int(cell - '0')
+        if intCell < 1 || intCell > 9 || numbersFound[intCell] != 0 {
+            return false
+        } else {
+            numbersFound[intCell] = intCell
+        }
+    }
+    return true
+}
+
+func isValidSudoku(board [][]byte) bool {
+    for _, row := range board {
+        numbersFound := make([]int, 10)
+        for _, cell := range row {
+            valid := validateCell(numbersFound, cell)
+            if !valid {
+                return false;
+            }
+        }
+    }
+
+    for column := range 9 {
+        numbersFound := make([]int, 10)
+        for _, row := range board {
+            if row[column] != '.' {
+                valid := validateCell(numbersFound, row[column])
+                if !valid {
+                    return false;
+                }
+            }
+        }
+    }
+
+    for columnSegment := range 3 {
+        for rowSegment := range 3 {
+            numbersFound := make([]int, 10)
+            for cellSegment := range 9 {
+                cell := board[(columnSegment * 3) + (cellSegment / 3)][(rowSegment * 3) + (cellSegment % 3)]
+                valid := validateCell(numbersFound, cell)
+                if !valid {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true
+}

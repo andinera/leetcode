@@ -1,0 +1,15 @@
+func maxProfit(prices []int) int {
+    maxProfit := 0
+    lowestNumber := math.MaxInt
+    
+    for _, value := range prices {
+        if value - lowestNumber > maxProfit {
+            maxProfit = value - lowestNumber
+        }
+        if value < lowestNumber {
+            lowestNumber = value
+        }
+    }
+
+    return maxProfit
+}

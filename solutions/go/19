@@ -1,0 +1,26 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+    if n == 0 {
+        return head
+    }
+
+    top := head
+    listNodes := make([]*ListNode, 0)
+    listNodes = append(listNodes, head)
+    for ; head.Next != nil; {
+        listNodes = append(listNodes, head.Next)
+        head = head.Next
+    }
+
+    if n == len(listNodes) {
+        return top.Next
+    }
+    listNodes[len(listNodes) - n - 1].Next = listNodes[len(listNodes) - n].Next
+    return top
+}

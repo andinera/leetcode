@@ -1,0 +1,8 @@
+func rotate(nums []int, k int)  {
+    modK := k % len(nums)
+
+    kSlice := make([]int, modK)
+    copy(kSlice, nums[len(nums)-modK:])
+    copy(nums[modK:], nums)
+    copy(nums[:modK], kSlice)
+}
